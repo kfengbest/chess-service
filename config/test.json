@@ -1,0 +1,9 @@
+{
+    "server": {
+        "host": "localhost",
+        "port": 3000
+    },
+    "mongodb" : {
+        "url" : "mongodb://mongoadmin:qwe123@localhost:27888/chess?authSource=admin"
+    }
+}

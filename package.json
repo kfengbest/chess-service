@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "set NODE_ENV=development && node index.js",
+    "test": "set NODE_ENV=test && jest --config ./jest.config.json"
   },
   "repository": {
     "type": "git",
@@ -22,5 +23,9 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "mongoose": "^6.0.13"
+  },
+  "devDependencies": {
+    "jest": "^27.3.1",
+    "supertest": "^6.1.6"
   }
 }
