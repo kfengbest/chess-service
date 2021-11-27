@@ -51,8 +51,8 @@ const SQUARES = {
 };
 
 const PAWN_OFFSETS = {
-    B: [16, 32, 17, 15],
-    W: [-16, -32, -17, -15],
+    B: [16, 32, 17, 15],     //[move one step, move two steps, attack bottom right, attach bottom left]
+    W: [-16, -32, -17, -15], //[move one step, move two steps, attack top left,     attach top right]
 };
 
 class Chess {
@@ -221,6 +221,7 @@ class Chess {
                     }
                 }
 
+                // attack jump
                 for (let i = 2; i < 4; i++) {
                     const pawn_attack = offsets[i] + pos_value;
                     if (this.isInBoard(pawn_attack)) {
@@ -273,6 +274,16 @@ class Chess {
         return targetMove;
     }
 
+    /*
+            "R-B N-B B-B Q-B K-B B-B N-B R-B ",
+            "P-B P-B P-B P-B P-B P-B P-B P-B ",
+            " -   -   -   -   -   -   -   -  ",
+            " -   -   -   -   -   -   -   -  ",
+            " -   -   -   -   -   -   -   -  ",
+            " -   -   -   -   -   -   -   -  ",
+            "P-W P-W P-W P-W P-W P-W P-W P-W ",
+            "R-W N-W B-W Q-W K-W B-W N-W R-W "
+    */
     printBoard() {
         let rows = '87654321';
         let cols = 'abcdefgh';
