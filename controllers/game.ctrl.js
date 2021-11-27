@@ -1,33 +1,28 @@
 const {Game, Move} = require('../models/game');
+const {Chess} = require('../services/chess');
 
 class GameController {
     constructor() {
     }
 
     async newGame(req, res) {
+        try {
+            let chess = new Chess();
 
-        let game = new Game({
-            u1 : 'W',
-            u2 : 'B',
-            result: 'new',
-            board: 'RNBKQBNRPPPPPPPOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOpppppppprnbkqnr',
-            moves: []
-        })
+            let game = new Game({
+                u1 : 'W',
+                u2 : 'B',
+                result: 'new',
+                board: JSON.stringify(chess.getBoard()),
+                moves: []
+            })
 
-        let newMove = new Move({
-            order: game.moves.length+1,
-            player: 'W',
-            piece: 'R',
-            from: 'e1',
-            to: 'e2'
-        })
-
-        await newMove.save();
-
-        game.moves.push(newMove);
-        await game.save();
-
-        return res.json({game});
+            await game.save();
+            return res.json({game});
+        } catch(e) {
+            console.log(e.message);
+            return res.status(500).json({ error: e.message });
+        }
     }
 
     async getGameById(req, res) {
@@ -38,7 +33,7 @@ class GameController {
 
         } catch(e) {
             console.log(e.message);
-            res.sendStatus(500) && next(error);
+            return res.status(404).json({ error: e.message });
         }
     }
 
@@ -51,7 +46,7 @@ class GameController {
 
         } catch(e) {
             console.log(e.message);
-            res.sendStatus(500) && next(error);
+            return res.status(500).json({ error: e.message });
         }
     }
 
@@ -77,7 +72,7 @@ class GameController {
             return res.json({game});
         } catch(e) {
             console.log(e.message);
-            res.sendStatus(500) && next(error);
+            return res.status(500).json({ error: e.message });
         }
     }
 
@@ -89,7 +84,7 @@ class GameController {
             return res.json({'moves': game.moves});
         } catch(e) {
             console.log(e.message);
-            res.sendStatus(500) && next(error);
+            return res.status(500).json({ error: e.message });
         }
     }
 }
