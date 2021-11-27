@@ -41,10 +41,15 @@ class GameController {
     async legalMoves(req, res) {
 
         try {
-            const game = await Game.findOne({ _id: req.params.id});
-            const chess = new Chess(JSON.parse(game.board));
-            let moves = game.moves;
-            return res.json({'moves': moves});
+            
+            let game = await Game.findOne({ _id: req.params.id});
+            let chess = new Chess(JSON.parse(game.board));
+
+            let from = req.params.from;
+            let sqaure = chess.getSquare(from);
+
+            let legalMoves = chess.getLegalMoves(sqaure.color, sqaure.piece, from);
+            return res.json({'legalMoves': legalMoves});
 
         } catch(e) {
             console.log(e.message);

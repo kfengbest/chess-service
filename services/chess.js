@@ -259,31 +259,41 @@ class Chess {
                 }
             }
         }
+        let legalMovesRes = legalMoves.map( to => {
 
-        return legalMoves;
+            let flag = 'normal'; // normal movement
+            if (this.board[to].color) {
+                if (this.board[to].color !== playerColor) {
+                    flag = 'attack'; // attack movement
+                }
+            }
+            return {
+                to : to,
+                piece: this.board[to].piece,
+                color: this.board[to].color,
+                result: flag
+            }
+        })
+        return legalMovesRes;
     }
 
     canMove(playerColor, piece, from, to) {
         const legalMoves = this.getLegalMoves(playerColor, piece, from);
-        return legalMoves.includes(to);
+        let res = legalMoves.filter( e => e.to === to);
+        return res.length === 1 ? res[0] : null;
     }
 
     move(playerColor, from, to) {
         const square = this.board[from];
+        let targetMove = null;
         if (square.color && square.color === playerColor) {
-            if (this.canMove(playerColor, square.piece, from, to)) {
-                let flag = '-'; // normal movement
-                if (this.board[to].color) {
-                    if (this.board[to].color !== playerColor) {
-                        flag = 'x'; // attack movement
-                    }
-                }
+            targetMove = this.canMove(playerColor, square.piece, from ,to);
+            if(targetMove) {
                 this.board[to] = { color: playerColor, piece: square.piece };
                 this.board[from] = { color: '', piece: null };
-                return flag;
             }
         }
-        return null;
+        return targetMove;
     }
 
     printBoard() {
