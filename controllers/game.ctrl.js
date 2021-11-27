@@ -14,6 +14,7 @@ class GameController {
                 u2 : 'B',
                 result: 'new',
                 board: JSON.stringify(chess.getBoard()),
+                print: chess.printBoard(),
                 moves: []
             })
 
@@ -41,6 +42,7 @@ class GameController {
 
         try {
             const game = await Game.findOne({ _id: req.params.id});
+            const chess = new Chess(JSON.parse(game.board));
             let moves = game.moves;
             return res.json({'moves': moves});
 
@@ -57,16 +59,23 @@ class GameController {
             let to = req.params.to;
 
             const game = await Game.findOne({ _id: req.params.id});
+            const chess = new Chess(JSON.parse(game.board));
+            const {color, piece} = chess.getSquare(from);
+            let moveResult = chess.move(color, from, to);
 
             let newMove = new Move({
                 order: game.moves.length+1,
-                player: 'W',
-                piece: 'R',
+                player: color,
+                piece: piece,
                 from: from,
-                to: to
+                to: to,
+                result: moveResult
             })
-
+            
+            game.board = JSON.stringify(chess.getBoard());
+            game.print = chess.printBoard();
             game.moves.push(newMove);
+
             await game.save();
 
             return res.json({game});

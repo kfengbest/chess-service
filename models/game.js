@@ -5,7 +5,8 @@ const MoveSchema = mongoose.Schema({
     player: String,
     piece: String,
     from: String,
-    to: String
+    to: String,
+    result: String
 })
 
 const Move = mongoose.model("Move", MoveSchema);
@@ -16,6 +17,7 @@ const GameSchema = mongoose.Schema({
     date: { type: Date, default: Date.now },
     result: String,
     board: String,
+    print: [String],
     moves: [MoveSchema]
 })
 

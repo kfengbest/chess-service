@@ -160,6 +160,16 @@ class Chess {
         return this.valueToCord(position)[1];
     }
 
+    getSquare(position) {
+        if(this.isInBoard(position)) {
+            return this.board[position];
+        } else {
+            return {
+                color: '',
+                piece: '',
+            }
+        }
+    }
     canPawnDoubleJump(color, position) {
         if (typeof position === 'string') {
             position = SQUARES[position];
@@ -279,6 +289,7 @@ class Chess {
     printBoard() {
         let rows = '87654321';
         let cols = 'abcdefgh';
+        let res = [];
         for (let r of rows) {
             let rowValue = '';
             for (let c of cols) {
@@ -289,8 +300,11 @@ class Chess {
                 let val = `${piece}-${color} `;
                 rowValue += val;
             }
+            res.push(rowValue);
             console.log(rowValue);
         }
+
+        return res;
     }
 }
 
