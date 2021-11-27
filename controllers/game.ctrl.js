@@ -107,15 +107,7 @@ class GameController {
     }
 
     async getHistoryMoves(req, res) {
-        
-        try {
-            const game = await Game.findOne({ _id: req.params.id});
-    
-            return res.json({'moves': game.moves});
-        } catch(e) {
-            console.log(e.message);
-            return res.status(500).json({ error: e.message });
-        }
+        return res.status(404).json({ error: "not implemented yet" });
     }
 }
 
