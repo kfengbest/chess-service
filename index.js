@@ -15,7 +15,7 @@ mongoose.connect(dbUrl, { useNewUrlParser: true})
 
             app.use(bodyParser.json());
             app.use(bodyParser.urlencoded({ extended: true }));
-            app.use('/api', routes);
+            app.use('/', routes);
             
             app.listen(port, () => {
                 console.log(`Listening on port => ${port}`);
