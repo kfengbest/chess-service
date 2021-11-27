@@ -21,6 +21,8 @@ const ROOK = 'R';
 const WHITE = 'W';
 const BLACK = 'B';
 const PLAYERS = [BLACK, WHITE];
+const MOVE_NORMAL = "normal";
+const MOVE_ATTACK = "attack";
 
 const VALID_PIECES = 'NPKBQR';
 const SECOND_RANK = { B: '7', W: '2' };
@@ -51,14 +53,6 @@ const SQUARES = {
 const PAWN_OFFSETS = {
     B: [16, 32, 17, 15],
     W: [-16, -32, -17, -15],
-};
-
-const PIECE_OFFSETS = {
-    N: [-18, -33, -31, -14, 18, 33, 31, 14],
-    B: [-17, -15, 17, 15],
-    R: [-16, 1, 16, -1],
-    Q: [-17, -16, -15, 1, 17, 16, 15, -1],
-    K: [-17, -16, -15, 1, 17, 16, 15, -1],
 };
 
 class Chess {
@@ -238,39 +232,15 @@ class Chess {
                     }
                 }
             } else {
-                const offsets = PIECE_OFFSETS[piece];
-                for (let i = 0; i < offsets.length; i++) {
-                    let move = pos_value;
-                    while (true) {
-                        move += offsets[i];
-                        if (!this.isInBoard(move)) {
-                            break;
-                        }
-                        const pos = this.valueToCord(move);
-                        const square = this.board[pos];
-                        if (!square.piece) {
-                            legalMoves.push(pos);
-                        } else {
-                            if (square.color === playerColor) {
-                                break;
-                            }
-                            legalMoves.push(pos);
-                            break;
-                        }
-
-                        if (piece === KING || piece === KNIGHT) {
-                            break;
-                        }
-                    }
-                }
+                // The other pieces's potential movement has not been impelmented yet.
             }
         }
         let legalMovesRes = legalMoves.map( to => {
 
-            let flag = 'normal'; // normal movement
+            let flag = MOVE_NORMAL; // normal movement
             if (this.board[to].color) {
                 if (this.board[to].color !== playerColor) {
-                    flag = 'attack'; // attack movement
+                    flag = MOVE_ATTACK; // attack movement
                 }
             }
             return {

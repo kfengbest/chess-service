@@ -47,9 +47,12 @@ class GameController {
             let chess = new Chess(JSON.parse(game.board));
 
             let from = req.params.from;
-            let sqaure = chess.getSquare(from);
+            if(!chess.isInBoard(from)) {
+                return res.status(400).json({ error: 'Invalid position' });
+            }
 
-            let legalMoves = chess.getLegalMoves(sqaure.color, sqaure.piece, from);
+            let sqaureFrom = chess.getSquare(from);
+            let legalMoves = chess.getLegalMoves(sqaureFrom.color, sqaureFrom.piece, from);
             return res.json({'legalMoves': legalMoves});
 
         } catch(e) {
@@ -66,6 +69,10 @@ class GameController {
 
             const game = await Game.findOne({ _id: req.params.id});
             const chess = new Chess(JSON.parse(game.board), game.nextPlayer);
+            if(!chess.isInBoard(from) || !chess.isInBoard(to)) {
+                return res.status(400).json({ error: 'Invalid position' });
+            }
+
             const {color, piece} = chess.getSquare(from);
             let moveResult = chess.move(chess.getNextPlayer(), from, to);
             if(moveResult) {
@@ -84,7 +91,7 @@ class GameController {
                 await game.save();
                 return res.json({game});
             } else {
-                return res.status(200).json({ 
+                return res.status(400).json({ 
                     result: "Invalid move",
                     nextPlayer: chess.getNextPlayer(),
                     from : {
