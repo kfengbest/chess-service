@@ -13,6 +13,7 @@ class GameController {
                 u1 : 'W',
                 u2 : 'B',
                 result: 'new',
+                nextPlayer: chess.getNextPlayer(),
                 board: JSON.stringify(chess.getBoard()),
                 print: chess.printBoard(),
                 moves: []
@@ -64,26 +65,41 @@ class GameController {
             let to = req.params.to;
 
             const game = await Game.findOne({ _id: req.params.id});
-            const chess = new Chess(JSON.parse(game.board));
+            const chess = new Chess(JSON.parse(game.board), game.nextPlayer);
             const {color, piece} = chess.getSquare(from);
-            let moveResult = chess.move(color, from, to);
-
-            let newMove = new Move({
-                order: game.moves.length+1,
-                player: color,
-                piece: piece,
-                from: from,
-                to: to,
-                result: moveResult
-            })
+            let moveResult = chess.move(chess.getNextPlayer(), from, to);
+            if(moveResult) {
+                let newMove = new Move({
+                    order: game.moves.length+1,
+                    player: color,
+                    piece: piece,
+                    from: from,
+                    to: to,
+                    result: moveResult.result
+                });
+                game.board = JSON.stringify(chess.getBoard());
+                game.nextPlayer = chess.getNextPlayer();
+                game.print = chess.printBoard();
+                game.moves.push(newMove);
+                await game.save();
+                return res.json({game});
+            } else {
+                return res.status(200).json({ 
+                    result: "Invalid move",
+                    nextPlayer: chess.getNextPlayer(),
+                    from : {
+                        color : chess.getBoard()[from].color,
+                        piece : chess.getBoard()[from].piece,
+                        position : from
+                    },
+                    to : {
+                        color : chess.getBoard()[to].color,
+                        piece : chess.getBoard()[to].piece,
+                        position : to
+                    }
+                });
+            }
             
-            game.board = JSON.stringify(chess.getBoard());
-            game.print = chess.printBoard();
-            game.moves.push(newMove);
-
-            await game.save();
-
-            return res.json({game});
         } catch(e) {
             console.log(e.message);
             return res.status(500).json({ error: e.message });

@@ -17,6 +17,7 @@ const GameSchema = mongoose.Schema({
     date: { type: Date, default: Date.now },
     result: String,
     board: String,
+    nextPlayer: String,
     print: [String],
     moves: [MoveSchema]
 })

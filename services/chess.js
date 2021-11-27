@@ -17,8 +17,11 @@ const BISHOP = 'B';
 const QUEEN = 'Q';
 const ROOK = 'R';
 
+
 const WHITE = 'W';
 const BLACK = 'B';
+const PLAYERS = [BLACK, WHITE];
+
 const VALID_PIECES = 'NPKBQR';
 const SECOND_RANK = { B: '7', W: '2' };
 
@@ -59,9 +62,10 @@ const PIECE_OFFSETS = {
 };
 
 class Chess {
-    constructor(board) {
+    constructor(board, nextPlayer = BLACK) {
         if (board) {
             this.board = board;
+            this.nextPlayer = nextPlayer;
         } else {
             this.resetBoard();
         }
@@ -70,6 +74,7 @@ class Chess {
     emptyBoard() {
         const squares = Object.keys(SQUARES);
         this.board = {};
+        this.nextPlayer = BLACK;
         squares.map(square => {
             this.board[square] = {
                 color: '',
@@ -77,6 +82,10 @@ class Chess {
             };
             return square;
         });
+    }
+
+    getNextPlayer() {
+        return this.nextPlayer;
     }
 
     resetBoard() {
@@ -120,10 +129,6 @@ class Chess {
 
     getBoard() {
         return this.board;
-    }
-
-    setBoard(board) {
-        this.board = board;
     }
 
     isInBoard(position) {
@@ -170,6 +175,7 @@ class Chess {
             }
         }
     }
+
     canPawnDoubleJump(color, position) {
         if (typeof position === 'string') {
             position = SQUARES[position];
@@ -290,7 +296,8 @@ class Chess {
             targetMove = this.canMove(playerColor, square.piece, from ,to);
             if(targetMove) {
                 this.board[to] = { color: playerColor, piece: square.piece };
-                this.board[from] = { color: '', piece: null };
+                this.board[from] = { color: '', piece: '' };
+                this.nextPlayer = this.nextPlayer === BLACK ? WHITE : BLACK;
             }
         }
         return targetMove;
