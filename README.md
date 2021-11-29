@@ -27,7 +27,7 @@ Chess as Service
 
 POST `/games` Create a new chess game
 
-    $ curl POST 'http://localhost:3000/games'
+    $ curl --request POST http://localhost:3000/games
 
 GET `/games/:id` Fetech game's current state
 
@@ -40,7 +40,7 @@ GET `/games/:id/legal-moves/:from` Fetch potential spece for any piece from curr
 
 POST `/games/:id/moves/:from/:to` Update game with a new move
 
-    $ curl POST 'http://localhost:3000/games/61a29d2be49cb4a2ff3f16b7/moves/a2/a4'
+    $ curl --request POST 'http://localhost:3000/games/61a29d2be49cb4a2ff3f16b7/moves/a2/a4'
 
 GET `/games/:id/history-moves` Fetch history of all moves for a game
 
